@@ -3,6 +3,11 @@ variable "vsphere_username" {
   default = "administrator@vsphere.local"
 }
 
+variable "vsphere_password" {
+  description = "vSphere LAB User"
+  default = "********"
+}
+
 variable "vsphere_server" {
   description = "vSphere LAB Server"
   default = "10.210.8.65"

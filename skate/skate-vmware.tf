@@ -1,6 +1,6 @@
 provider "vsphere" {
-  #user           = "${var.vsphere_username}"
-  #password       = "${var.vsphere_password}"
+  user           = "${var.vsphere_username}"
+  password       = "${var.vsphere_password}"
   vsphere_server = "${var.vsphere_server}"
 
   # if you have a self-signed cert
@@ -8,6 +8,27 @@ provider "vsphere" {
 }
 
 data "vsphere_datacenter" "matran" {}
+
+#Root resource pool
+data "vsphere_resource_pool" "root_rp" {
+  name          = "LAB-1/Resources"
+  datacenter_id = "${data.vsphere_datacenter.matran.id}"
+}
+
+data "vsphere_datastore" "datastore1" {
+  name          = "datastore1"
+  datacenter_id = "${data.vsphere_datacenter.matran.id}"
+}
+
+data "vsphere_network" "LAB-1_VLAN2247" {
+  name          = "LAB-1_VLAN2247"
+  datacenter_id = "${data.vsphere_datacenter.matran.id}"
+}
+
+data "vsphere_virtual_machine" "u1804_template" {
+  name          = "U1804"
+  datacenter_id = "${data.vsphere_datacenter.matran.id}"
+}
 
 # Create a folder
 resource "vsphere_folder" "terraform_folder" {
@@ -19,20 +40,27 @@ resource "vsphere_folder" "terraform_folder" {
 # Create a virtual machine within the folder
 resource "vsphere_virtual_machine" "vm_name_01" {
   name       = "${var.vm_name_01}"
-  #datacenter_id = "${var.datacenter}"
+  guest_id = "${data.vsphere_virtual_machine.u1804_template.guest_id}"
   folder     = "${vsphere_folder.terraform_folder.path}"
   num_cpus       = 2
   memory     = 4096
-  datastore_id     = "${var.datastore1}"
-  resource_pool_id = ""
+  datastore_id     = "${data.vsphere_datastore.datastore1.id}"
+  resource_pool_id = "${data.vsphere_resource_pool.root_rp.id}"
 
   network_interface {
-    network_id = "${var.LAB-1_VLAN2247}"
+    network_id = "${data.vsphere_network.LAB-1_VLAN2247.id}"
+    adapter_type = "${data.vsphere_virtual_machine.u1804_template.network_interface_types[0]}"
   }
 
   disk {
-    label = "disk0"
-    size  = 20
+    label            = "disk0"
+    size             = "${data.vsphere_virtual_machine.u1804_template.disks.0.size}"
+    eagerly_scrub    = "${data.vsphere_virtual_machine.u1804_template.disks.0.eagerly_scrub}"
+    thin_provisioned = "${data.vsphere_virtual_machine.u1804_template.disks.0.thin_provisioned}"
+  }
+
+  clone {
+    template_uuid = "${data.vsphere_virtual_machine.u1804_template.id}"
   }
 }
 #   provisioner "remote-exec" {
