@@ -1,6 +1,6 @@
 variable "vsphere_username" {
   description = "vSphere LAB User"
-  #default = "administrator@vsphere.local"
+  default = "administrator@vsphere.local"
 }
 
 variable "vsphere_password" {

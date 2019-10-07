@@ -37,14 +37,14 @@ module "windows_vm" {
 # ------------------------------------------------------------------------------
   hosts  = ["my-vsphere-host"]
 # ------------------------------------------------------------------------------
-  datacenter        = "Matran"
+  datacenter        = "${data.vsphere_datacenter.matran.id}"
   resource_pool     = "${data.vsphere_resource_pool.root_rp.name}"
   datastore_backend = "${data.vsphere_datastore.datastore1.name}"
   network_backend   = "${data.vsphere_network.LAB-1_VLAN2247.name}"
   #vsphere_folder    = "${vsphere_folder.terraform_folder.path}"
 # ------------------------------------------------------------------------------
   name     = "vm-test1-linux"
-  template = "${data.vsphere_virtual_machine.u1804_template.name}"
+  template = "${data.vsphere_virtual_machine.u1804_template.id}"
 # ------------------------------------------------------------------------------
   #cpu     = 2
   #ram_mb  = 2048
