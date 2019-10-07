@@ -1,4 +1,4 @@
-variable "vsphere_username" {
+variable "vsphere_user" {
   description = "vSphere LAB User"
   default = "administrator@vsphere.local"
 }
