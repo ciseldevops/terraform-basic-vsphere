@@ -32,7 +32,7 @@ module "windows_vm" {
 # ------------------------------------------------------------------------------
   hosts  = ["my-vsphere-host"]
 # ------------------------------------------------------------------------------
-  datacenter        = "${data.vsphere_datacenter.matran.id}"
+  datacenter        = "${data.vsphere_datacenter.matran.name}"
   resource_pool     = "${data.vsphere_resource_pool.root_rp.name}"
   datastore_backend = "${data.vsphere_datastore.datastore1.name}"
   network_backend   = "${data.vsphere_network.LAB-1_VLAN2247.name}"
