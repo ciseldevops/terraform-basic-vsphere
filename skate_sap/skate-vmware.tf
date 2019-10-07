@@ -1,12 +1,3 @@
-provider "vsphere" {
-  #user           = "${var.vsphere_username}"
-  #password       = "${var.vsphere_password}"
-  vsphere_server = "${var.vsphere_server}"
-
-  # if you have a self-signed cert
-  allow_unverified_ssl = true
-}
-
 data "vsphere_datacenter" "matran" {}
 
 #Root resource pool
@@ -39,7 +30,7 @@ module "windows_vm" {
   #vsphere_folder    = "${vsphere_folder.terraform_folder.path}"
 # ------------------------------------------------------------------------------
   name     = "vm-test1-sme"
-  template = "WIN2016V1"
+  template = "WIN2016V2"
 # ------------------------------------------------------------------------------
   cpu     = 2
   ram_mb  = 2048
