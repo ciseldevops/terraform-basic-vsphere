@@ -43,8 +43,8 @@ module "windows_vm" {
   network_backend   = "${data.vsphere_network.LAB-1_VLAN2247.name}"
   #vsphere_folder    = "${vsphere_folder.terraform_folder.path}"
 # ------------------------------------------------------------------------------
-  name     = "vm-test1-linux"
-  template = "${data.vsphere_virtual_machine.u1804_template.id}"
+  name     = "vm-test1-sme"
+  template = "virtuelleVMTEST01"
 # ------------------------------------------------------------------------------
   #cpu     = 2
   #ram_mb  = 2048
