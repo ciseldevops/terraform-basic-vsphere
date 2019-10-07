@@ -39,7 +39,7 @@ module "windows_vm" {
   #vsphere_folder    = "${vsphere_folder.terraform_folder.path}"
 # ------------------------------------------------------------------------------
   name     = "vm-test1-sme"
-  template = "VMTEST01"
+  template = "WIN2016V1"
 # ------------------------------------------------------------------------------
   #cpu     = 2
   #ram_mb  = 2048
