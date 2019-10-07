@@ -5,7 +5,15 @@ variable "vsphere_username" {
 
 variable "vsphere_password" {
   description = "vSphere LAB User"
-  #default = ""
+}
+
+variable "provider.vsphere.password" {
+  description = "vSphere LAB Pwd"
+}
+
+variable "provider.vsphere.user" {
+  description = "vSphere LAB User"
+  default = "administrator@vsphere.local"
 }
 
 variable "vsphere_server" {

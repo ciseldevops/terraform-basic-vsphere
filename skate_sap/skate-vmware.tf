@@ -25,11 +25,6 @@ data "vsphere_network" "LAB-1_VLAN2247" {
   datacenter_id = "${data.vsphere_datacenter.matran.id}"
 }
 
-data "vsphere_virtual_machine" "u1804_template" {
-  name          = "U1804"
-  datacenter_id = "${data.vsphere_datacenter.matran.id}"
-}
-
 
 
 module "windows_vm" {
