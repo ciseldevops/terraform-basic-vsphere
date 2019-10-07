@@ -30,7 +30,7 @@ data "vsphere_network" "LAB-1_VLAN2247" {
 module "windows_vm" {
   source = "github.com/www-aiqu-no/terraform-vsphere-windows-vm.git?ref=v0.0.2"
 # ------------------------------------------------------------------------------
-  hosts  = ["my-vsphere-host"]
+  hosts  = ["10.210.8.65"]
 # ------------------------------------------------------------------------------
   datacenter        = "${data.vsphere_datacenter.matran.name}"
   resource_pool     = "${data.vsphere_resource_pool.root_rp.name}"
