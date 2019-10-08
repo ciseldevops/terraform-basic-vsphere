@@ -1,4 +1,4 @@
-module "virtual_machines_hana" {
+#module "virtual_machines_hana" {
   #source               = "../modules/"
   #datacenter           = "${var.datacenter}"
   #datastore            = "${var.datastore}"
@@ -13,4 +13,4 @@ module "virtual_machines_hana" {
   #vm_name_prefix       = "${var.hana_vm_name_prefix}"
   #vm_count             = "${var.vm_count}"
   #vm_name_prefix       = "${var.vm_name_prefix}"
-}
+#}
