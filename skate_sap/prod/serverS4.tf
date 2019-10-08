@@ -3,6 +3,7 @@ module "example-server-windowsvm-withdatadisk" {
   #version       = "1.0.0"
   source        = "../modules/vsphere_vm"
   vmtemp        = "WIN2016V2"
+  is_windows_image = "true"
   instances     = 1
   vmname        = "example-server-windowssme"
   vmrp          = "LAB-1/Resources"
