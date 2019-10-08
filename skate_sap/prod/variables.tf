@@ -11,7 +11,6 @@ variable "vsphere_server" {
   description = "vSphere LAB Server"
   default = "10.210.8.65"
 }
-
 #--- DATACENTER 
 variable "datacenter" {
   description = "Datacenter"
