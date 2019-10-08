@@ -19,7 +19,6 @@
 
  module "virtual_machines" {
    source                     = "../modules/vsphere_vm"
-   version                    = "1.0.0"
    datacenter                 = "${var.datacenter}"
    datastore                  = "${var.datastore}"
    disk_size                  = "20"
