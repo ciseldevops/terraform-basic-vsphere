@@ -1,6 +1,4 @@
 module "example-server-windowsvm-withdatadisk" {
-  #source        = "Terraform-VMWare-Modules/vm/vsphere"
-  #version       = "1.0.0"
   source        = "../modules/vsphere_vm"
   vmtemp        = "WIN2016V2"
   is_windows_image = "true"
