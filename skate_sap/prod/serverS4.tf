@@ -1,4 +1,4 @@
-module "virtual_machines" {
+module "virtual_machines_s4" {
   source               = "../modules/"
   datacenter           = "${var.datacenter}"
   datastore            = "${var.datastore}"
