@@ -1,5 +1,5 @@
 module "virtual_machines_s4" {
-  source               = "../modules/"
+  source               = "./modules/"
   datacenter           = "${var.datacenter}"
   datastore            = "${var.datastore}"
   network              = "${var.network}"
