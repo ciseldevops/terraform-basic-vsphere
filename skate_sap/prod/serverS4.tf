@@ -1,14 +1,14 @@
 module "example-server-linuxvm" {
   source        = "Terraform-VMWare-Modules/vm/vsphere"
   version       = "1.0.0"
-  vmtemp        = "TemplateName"
+  vmtemp        = "WIN2016V2"
   instances     = 1
-  vmname        = "example-server-windows"
-  vmrp          = "esxi/Resources"
-  network_cards = ["Name of the POrt Group in vSphere"]
+  vmname        = "example-server-windowssme"
+  vmrp          = "LAB-1/Resources"
+  network_cards = ["LAB-1_VLAN2247"]
   ipv4 = {
-    "Name of the POrt Group in vSphere" = ["10.0.0.1"] # To use DHCP create Empty list for each instance
+    "LAB-1_VLAN2247" = ["10.210.8.26"] # To use DHCP create Empty list for each instance
   }
-  dc        = "Datacenter"
-  datastore = "Data Store name(use ds_cluster for datastore cluster)"
+  dc        = "MATRAN"
+  datastore = "datastore1"
 }
