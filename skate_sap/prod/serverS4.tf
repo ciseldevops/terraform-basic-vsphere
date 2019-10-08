@@ -18,7 +18,7 @@
 
 
  module "virtual_machines" {
-   source                     = "vancluever/terraform-vsphere-virtual-machine"
+   source                     = "../modules/vsphere_vm"
    version                    = "1.0.0"
    datacenter                 = "${var.datacenter}"
    datastore                  = "${var.datastore}"
