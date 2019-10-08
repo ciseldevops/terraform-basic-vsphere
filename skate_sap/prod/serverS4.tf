@@ -1,9 +1,9 @@
-module "example-server-windowsvm-withdatadisk" {
+module "server-windowsvm-withdatadisk" {
   source        = "../modules/vsphere_vm"
   vmtemp        = "WIN2016V2"
   is_windows_image = "true"
   instances     = 1
-  vmname        = "example-server-windowssme"
+  vmname        = "server-windowssme"
   vmrp          = "LAB-1/Resources"
   network_cards = ["LAB-1_VLAN2247"]
   ipv4 = {

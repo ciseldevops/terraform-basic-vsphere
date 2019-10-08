@@ -1,8 +1,8 @@
-module "example-server-windowsvm-withdatadisk" {
+module "server-hana" {
   source        = "../modules/vsphere_vm"
   vmtemp        = "SLES12SP1SAP01"
   instances     = 1
-  vmname        = "example-server-sles-sme"
+  vmname        = "server-sles-sme"
   vmrp          = "LAB-1/Resources"
   network_cards = ["LAB-1_VLAN2247"]
   ipv4 = {
