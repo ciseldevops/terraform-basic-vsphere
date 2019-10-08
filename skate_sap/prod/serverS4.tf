@@ -1,31 +1,14 @@
-#module "virtual_machines" {
-#  source               = "../modules/vsphere_vm"
-#  datacenter           = "${var.datacenter}"
-#  datastore            = "${var.datastore}"
-#  network              = "${var.network}"
-#  resource_pool        = "${var.resource_pool}"
-#  
-#  ipv4_address_start   = "${var.s4_ipv4_address_start}"
-#  ipv4_gateway         = "${var.s4_ipv4_gateway}"
-#  ipv4_network_address = "${var.s4_ipv4_network_address}"
-#  
-#  template_name        = "${var.s4_template_name}"
-#  vm_name_prefix       = "${var.s4_vm_name_prefix}"
-#  vm_count             = "1"
-#
-#}
-
-
-
- module "virtual_machines" {
-   source                     = "../modules/vsphere_vm"
-   datacenter                 = "${var.datacenter}"
-   datastore                  = "${var.datastore}"
-   disk_size                  = "20"
-   guest_id                   = "otherLinuxGuest"
-   memory                     = "2048"
-   network                    = "${var.network}"
-   resource_pool              = "${var.resource_pool}"
-   vm_count                   = "1"
-   vm_name_prefix             = "srv"
- }
+module "example-server-linuxvm" {
+  source        = "Terraform-VMWare-Modules/vm/vsphere"
+  version       = "1.0.0"
+  vmtemp        = "TemplateName"
+  instances     = 1
+  vmname        = "example-server-windows"
+  vmrp          = "esxi/Resources"
+  network_cards = ["Name of the POrt Group in vSphere"]
+  ipv4 = {
+    "Name of the POrt Group in vSphere" = ["10.0.0.1"] # To use DHCP create Empty list for each instance
+  }
+  dc        = "Datacenter"
+  datastore = "Data Store name(use ds_cluster for datastore cluster)"
+}

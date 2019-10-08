@@ -1,79 +1,146 @@
-# terraform-vsphere-virtual-machine
+# Terraform vSphere Module (:star2: All new features)
 
-Module `terraform-vsphere-virtual-machine` is a universal module that can be
-used to deploy vSphere virtual machines either from scratch, or from a
-Windows or Linux-based template.
+For Virtual Machine Provisioning with (Linux/Windows) customization. Thanks to the new enhancements introduced in Terraform v0.12.6 this module include most the advance features that are available in the resource `vsphere_virtual_machine`. 
 
-This makes use of the following resources and data sources within the
-[Terraform vSphere provider][vsphere-provider]:
+:warning: The new version of this module only works with terraform version 0.12.6 and above :warning: 
 
-* [`vsphere_virtual_machine`][virtual-machine-resource]
-* [`vsphere_datacenter`][datacenter-data-source]
-* [`vsphere_resource_pool`][resource-pool-data-source]
-* [`vsphere_datastore`][datastore-data-source]
-* [`vsphere_virtual_machine` (Data Source)][virtual-machine-data-source]
+> This module now replace the functionality of the following modules:
+> * [`Terraform-VMWare-Modules-vm2nic`](https://registry.terraform.io/modules/Terraform-VMWare-Modules/vm2nic/vsphere/0.1.0)
+> * [`Terraform-VMWare-Modules-vm3nic`](https://registry.terraform.io/modules/Terraform-VMWare-Modules/vm3nic/vsphere/0.1.0)
 
-In order to use this module, ensure that you have configured the vSphere
-provider as per the instructions seen [here][vsphere-provider].
+## Deploys (Single/Multiple) Virtual Machines to your vSphere environment
 
-[vsphere-provider]: https://www.terraform.io/docs/providers/vsphere/index.html
-[virtual-machine-resource]: https://www.terraform.io/docs/providers/vsphere/r/virtual_machine.html
-[virtual-machine-data-source]: https://www.terraform.io/docs/providers/vsphere/d/virtual_machine.html
-[datacenter-data-source]: https://www.terraform.io/docs/providers/vsphere/d/datacenter.html
-[resource-pool-data-source]: https://www.terraform.io/docs/providers/vsphere/d/resource_pool.html
-[datastore-data-source]: https://www.terraform.io/docs/providers/vsphere/d/datastore.html
+This Terraform module deploys single or multiple virtual machines of type (Linux/Windows) with following features:
 
-Usage Example:
+* Ability to specify Linux or Windows VM customization.
+* Ability to add extra data disk (up to 15) to the VM.
+* Ability to deploy Multiple instances.
+* Ability to set IP and Gateway configuration for the VM.
+* Ability to add multiple network cards for the VM
+* Ability to choose vSphere resource pool or fall back to Cluster/ESXi root resource pool.
+* Ability to deploy Windows images to WorkGroup or Domain.
+* Ability to output VM names and IPs per module.
+* Ability assign tags and custom variables.
+* Ability to configure advance features for the vm.
+* Ability to deploy either a datastore or a datastore cluster.
+* Ability to enable cpu and memory hot plug features for the VM.
 
-    module "virtual_machines" {
-      source                     = "vancluever/terraform-vsphere-virtual-machine"
-      version                    = "1.0.0"
-      datacenter                 = "dc1"
-      datastore                  = "datastore1"
-      disk_size                  = "10"
-      guest_id                   = "otherLinuxGuest"
-      memory                     = "2048"
-      network                    = "network1"
-      resource_pool              = "cluster1/Resources"
-      vm_count                   = "3"
-      vm_name_prefix             = "srv"
-    }
+> Note: For module to work it needs number of required variables corresponding to an existing resources in vSphere. Please refer to variable section for the list of required variables.
 
+## Usage
 
+Following example contains the bare minimum options to be configured for (Linux/Windows) VM deployment. You can choose between windows and linux customization by simply using the ´is_windows_image´ boolean switch.
 
-## Inputs
+You can also download the entire module and use your own predefined variables to map your entire vSphere environment and use it within this module.
 
-| Name | Description | Type | Default | Required |
-|------|-------------|:----:|:-----:|:-----:|
-| admin_password | The administrator password for Windows machines. This is a sensitive field and will not be output on-screen, but is stored in state and sent to the VM in plain text - keep this in mind when provisioning your infrastructure. | string | `` | no |
-| alternate_guest_name | The guest name for the operating system when guest_id is other or other-64. Leave blank if not using these guest IDs. | string | `` | no |
-| datacenter | The datacenter to deploy the virtual machines to. | string | - | yes |
-| datastore | The datastore to deploy the virtual machines to. | string | - | yes |
-| disk_size | The amount of disk space to assign to each VM. Leave blank to use the template's disk size (cloned VMs only). | string | `` | no |
-| dns_servers | The DNS servers to assign to each virtual machine. | string | `<list>` | no |
-| domain_name | The domain of the virtual machine. This is added as the domain name on Linux, and to the DNS domain search list on both Linux and Windows. | string | `` | no |
-| guest_id | The virtual machine type. This only applies to VMs being created from scratch, otherwise it is unused. | string | `` | no |
-| ipv4_address_start | The IP address to start assigning virtual machines at, relative to the network address and mask. Example: for two virtual machines in 10.0.0.0/24, a value of 10 here would give the IP addresses 10.0.0.10 and 10.0.0.11. For 10.0.0.128/25, a value of 10 would give 10.0.0.138 and 10.0.0.139. | string | `1` | no |
-| ipv4_gateway | The default IPv4 gateway for the virtual machines. Leave blank for DHCP. | string | `` | no |
-| ipv4_network_address | The network address to assign during customization of cloned virtual machines, in A.B.C.D/XX format. Leave at the default value for DHCP. | string | `0.0.0.0/0` | no |
-| linked_clone | Clone the VM from a snapshot. If selected, the VM must have a single snapshot created. Cloned VMs only. | string | `false` | no |
-| memory | The amount of memory, in MB, to assign each virtual machine. | string | `1024` | no |
-| network | The network to deploy virtual machines to. | string | - | yes |
-| num_cpus | The number of virtual CPUs to assign each virtual machine. | string | `2` | no |
-| resource_pool | The resource pool to deploy the virtual machines to. If specifying a the root resource pool of a cluster, enter CLUSTER_NAME/Resources. | string | - | yes |
-| template_name | The template to clone virtual machines from. Leave this blank when creating a virtual machine from scratch. | string | `` | no |
-| template_os_family | The OS family of the supplied template. Should be one of linux or windows. Leave blank to create a virtual machine from scratch. | string | `` | no |
-| time_zone | The timezone, either in a timezone database format entry or sysprep entry, depending on if Linux or Windows is being deployed. The default is UTC on both family types. | string | `` | no |
-| vm_count | The number of virtual machines to create. | string | `1` | no |
-| vm_name_prefix | The prefix to use for virtual machines created with this module. | string | - | yes |
-| wait_for_guest_net_timeout | The timeout, in mintues, to wait for the guest network when creating virtual machines. On virtual machines created from scratch, you may wish to adjust this value to -1, which will disable the waiter. | string | `5` | no |
-| workgroup | The workgroup name for Windows customization. | string | `` | no |
+```hcl
+module "example-server-linuxvm" {
+  source        = "Terraform-VMWare-Modules/vm/vsphere"
+  version       = "1.0.0"
+  vmtemp        = "TemplateName"
+  instances     = 1
+  vmname        = "example-server-windows"
+  vmrp          = "esxi/Resources"
+  network_cards = ["Name of the POrt Group in vSphere"]
+  ipv4 = {
+    "Name of the POrt Group in vSphere" = ["10.0.0.1"] # To use DHCP create Empty list for each instance
+  }
+  dc        = "Datacenter"
+  datastore = "Data Store name(use ds_cluster for datastore cluster)"
+}
 
-## Outputs
+module "example-server-windowsvm" {
+  source           = "Terraform-VMWare-Modules/vm/vsphere"
+  version          = "1.0.0"
+  vmtemp           = "TemplateName"
+  is_windows_image = "true"
+  instances        = 1
+  vmname           = "example-server-windows"
+  vmrp             = "esxi/Resources"
+  network_cards    = ["Name of the POrt Group in vSphere"]
+  ipv4 = {
+    "Name of the POrt Group in vSphere" = ["10.0.0.1"] # To use DHCP create Empty list for each instance
+  }
+  dc        = "Datacenter"
+  datastore = "Data Store name(use ds_cluster for datastore cluster)"
+}
+```
 
-| Name | Description |
-|------|-------------|
-| virtual_machine_default_ips | The default IP address of each virtual machine deployed, indexed by name. |
-| virtual_machine_ids | The ID of each virtual machine deployed, indexed by name. |
-| virtual_machine_names | The names of each virtual machine deployed. |
+> Note: When deploying a windows server in WorkGroup, we recommend to keep the Local Admin password set to its default and change it later via an script. Unfortunately Terraform redeploy the entire server if you change the local admin password within your code.
 
+## Advance Usage
+
+There are number of switches defined in the module, where you can use to enable different features for VM provisioning.
+
+### Main Feature Switches
+
+* You can use `is_windows_image = "true"` to set the customization type to Windows (By default it is set to Linux customization)
+* You can use `data_disk_size_gb = [20,30]` to add one additional disk (Supported in both Linux and Windows deployment)
+  * Above switch will create two additional disk of capacity 10 and 30gb for the VM.
+  * You can include `thin_provisioned` switch to define disk type for each additional disk.
+* You can use `windomain = "somedomain.com"` to join a windows server to AD domain.
+  * Requires following additional variables
+    * `domainuser` Domain account with necessary privileges to join a computer to the domain.
+    * `domainpass` Domain user password.
+    * `is_windows_image` needs to be set to `true` to force the module to use Windows customization.
+
+Below is an example of windows deployment with some of the available feature sets.
+
+```hcl
+module "example-server-windowsvm-advanced" {
+  source                 = "Terraform-VMWare-Modules/vm/vsphere"
+  version                = "1.0.0"
+  dc                     = "Datacenter"
+  vmrp                   = "cluster/Resources" #Works with ESXi/Resources
+  vmfolder               = "Cattle"
+  ds_cluster             = "Datastore Cluster" #You can use datastore variable instead
+  vmtemp                 = "TemplateName"
+  instances              = 2
+  cpu_number             = 2
+  ram_size               = 2096
+  cpu_hot_add_enabled    = "true"
+  cpu_hot_remove_enabled = "true"
+  memory_hot_add_enabled = "true"
+  vmname                 = "AdvancedVM"
+  vmdomain               = "somedomain.com"
+  network_cards          = ["VM Network", "test-netwrok"] #Assign multiple cards
+  ipv4submask            = ["24", "8"]
+  ipv4 = { #assign IPs per card
+    "VM Network" = ["192.168.0.4", ""] // Here the first instance will use Static Ip and Second DHCP
+    "test"       = ["", "192.168.0.3"]
+  }
+  data_disk_size_gb = [10, 5] // Aditional Disk to be used
+  thin_provisioned  = ["true", "false"]
+  vmdns             = ["192.168.0.2", "192.168.0.1"]
+  vmgateway         = "192.168.0.1"
+  tags = {
+    "terraform-test-category"    = "terraform-test-tag"
+    "terraform-test-category-02" = "terraform-test-tag-02"
+  }
+  enable_disk_uuid = "true"
+  auto_logon       = "true"
+  run_once         = ["command01", "command02"]
+  orgname          = "Terraform-Module"
+  workgroup        = "Module-Test"
+  is_windows_image = "true"
+  firmware         = "efi"
+  local_adminpass  = "Password@Strong"
+}
+
+output "vmnames" {
+  value = "${module.example-server-windowsvm-advanced.Windows-VM}"
+}
+
+output "vmnameswip" {
+  value = "${module.example-server-windowsvm-advanced.Windows-ip}"
+}
+
+```
+
+## Authors
+
+Originally created by [Arman Keyoumarsi](https://github.com/Arman-Keyoumarsi)
+
+## License
+
+[MIT](LICENSE)
