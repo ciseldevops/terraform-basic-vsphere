@@ -36,4 +36,8 @@ module "server-windowsvm-withdatadisk" {
   }
   dc        = "MATRAN"
   datastore = "datastore1"
+  run_once = [
+          "netsh advfirewall firewall add rule name=\"ICMP Allow incoming V4 echo request\" protocol=icmpv4:8,any dir=in action=allow",
+          "Set-ItemProperty -Path 'HKLM:\\System\\CurrentControlSet\\Control\\Terminal Server'-name \"fDenyTSConnections\" -Value 0",
+          "Enable-NetFirewallRule -DisplayGroup \"Remote Desktop\""]
 }
