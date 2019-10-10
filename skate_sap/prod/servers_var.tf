@@ -6,10 +6,11 @@ variable "hana_template_name"{
   default = "SLES12SP1SAP01"
 }
 #--- FOLDER 
-variable "hana_folder_terraform"{
+variable "folder_terraform"{
   description = "Dossier VM Terraform"
   default = "TestSAP"
 }
+
 #--- VMNAME 
 variable "hana_vm_name"{
   description = "Nom de la VM 1"

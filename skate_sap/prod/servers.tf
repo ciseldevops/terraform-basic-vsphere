@@ -1,3 +1,14 @@
+
+data "vsphere_datacenter" "matran" {}
+
+# Create a folder
+resource "vsphere_folder" "terraform_folder" {
+  type          = "vm"
+  datacenter_id = "${data.vsphere_datacenter.matran.id}"
+  path = "${var.folder_terraform}"
+}
+
+
 #Variables serveur SLES SAP HANA
 module "server-hana" {
   source        = "../modules/vsphere_vm"
@@ -11,7 +22,7 @@ module "server-hana" {
   }
   dc        = "MATRAN"
   datastore = "datastore1"
-  vmfolder = "saptest"
+  vmfolder = "${var.folder_terraform}"
 }
 #Variables serveur Windows SAP S4
 module "server-windowsvm-withdatadisk" {
@@ -27,5 +38,5 @@ module "server-windowsvm-withdatadisk" {
   }
   dc        = "MATRAN"
   datastore = "datastore1"
-  vmfolder = "saptest"
+  vmfolder = "${var.folder_terraform}"
 }
