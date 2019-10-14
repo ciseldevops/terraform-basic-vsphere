@@ -5,7 +5,7 @@ variable "vsphere_username" {
 
 variable "vsphere_password" {
   description = "vSphere LAB User"
-  default = "********"
+  default = "Init.123456$"
 }
 
 variable "vsphere_server" {
@@ -25,7 +25,7 @@ variable "folder_terraform"{
 
 variable "vm_name_01"{
   description = "Nom de la VM 1"
-  default = "vmwareterra01"
+  default = "terratestfca"
 }
 
 variable "LAB-1_VLAN2247"{
@@ -43,12 +43,17 @@ variable "LAB-3_VLAN2252"{
   default = "LAB-3_VLAN2252"
 }
 
-variable "template_01"{
-  description = "Template Ubuntu 1804"
-  default = "U1804"
-}
-
 variable "datastore1"{
   description = "Local datastore1"
   default = "datastore1"
+}
+
+variable "dns_server_list" {
+  description = "List des serveurs DNS"
+  default = ["1.1.1.1", "8.8.8.8"] 
+}
+
+variable "dns_suffix_list" {
+  description = "List des suffixes DNS"
+  default = ["local"]
 }
