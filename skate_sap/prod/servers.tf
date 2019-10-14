@@ -19,7 +19,9 @@ module "server-hana" {
     "LAB-1_VLAN2247" = ["10.210.8.27"] # To use DHCP create Empty list for each instance
   }
   dc        = "MATRAN"
-  datastore = "datastore1"
+  datastore = "datastore1" 
+   run_once = [
+          "apt-get update"]
 }
 #Variables serveur Windows SAP S4
 module "server-windowsvm-withdatadisk" {
