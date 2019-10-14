@@ -21,7 +21,7 @@ module "server-hana" {
   dc        = "MATRAN"
   datastore = "datastore1" 
    run_once = [
-          "apt-get update"]
+          "echo \"test\" >> /tmp/test.txt"]
 }
 #Variables serveur Windows SAP S4
 module "server-windowsvm-withdatadisk" {
