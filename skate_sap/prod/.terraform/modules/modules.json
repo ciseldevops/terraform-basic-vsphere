@@ -1,1 +1,1 @@
-{"Modules":[{"Key":"server-hana","Source":"../modules/vsphere_vm","Dir":"../modules/vsphere_vm"},{"Key":"server-windowsvm-withdatadisk","Source":"../modules/vsphere_vm","Dir":"../modules/vsphere_vm"},{"Key":"","Source":"","Dir":"."}]}
+{"Modules":[{"Key":"","Source":"","Dir":"."},{"Key":"server-hana","Source":"../modules/vsphere_vm","Dir":"../modules/vsphere_vm"},{"Key":"server-windowsvm-withdatadisk","Source":"../modules/vsphere_vm","Dir":"../modules/vsphere_vm"}]}
