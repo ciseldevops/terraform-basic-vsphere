@@ -6,6 +6,14 @@ resource "vsphere_folder" "terraform_folder" {
   datacenter_id = "${data.vsphere_datacenter.matran.id}"
   path = "${var.folder_terraform}"
 }
+
+data "template_file" "cloud_config" {
+  template = "${file("cloud_config.yaml")}"
+  vars = {
+            vm_name = "server-sles-sme"
+        }
+}
+
 #Variables serveur SLES SAP HANA
 module "server-hana" {
   source        = "../modules/vsphere_vm"
@@ -19,9 +27,11 @@ module "server-hana" {
     "LAB-1_VLAN2247" = ["10.210.8.27"] # To use DHCP create Empty list for each instance
   }
   dc        = "MATRAN"
+  extra_config = {
+        "guestinfo.userdata" = "${base64gzip(data.template_file.cloud_config.rendered)}"
+        "guestinfo.userdata.encoding" = "gzip+base64"
+  }
   datastore = "datastore1" 
-   run_once = [
-          "echo test >> test.txt"]
 }
 #Variables serveur Windows SAP S4
 #module "server-windowsvm-withdatadisk" {
