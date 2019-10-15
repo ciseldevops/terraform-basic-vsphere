@@ -34,8 +34,8 @@ variable "vm_name_01"{
 
 variable "vm_template"{
   description = "Template"
-  #default = "U18043V03"
-  default = "SLES12SP1SAP01"
+  default = "U18043V03"
+  #default = "SLES12SP1SAP01"
 }
 
 variable "vm_ipv4_01"{

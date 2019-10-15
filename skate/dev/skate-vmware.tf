@@ -30,14 +30,14 @@ data "vsphere_virtual_machine" "template" {
   datacenter_id = "${data.vsphere_datacenter.matran.id}"
 }
 
-/*
+
 data "template_file" "cloud_config" {
   template = "${file("cloud_config.yaml")}"
   vars = {
             vm_name_01 = "${var.vm_name_01}"
         }
 }
-*/
+
 # Create a folder
 resource "vsphere_folder" "terraform_folder" {
   type          = "vm"
@@ -86,12 +86,12 @@ resource "vsphere_virtual_machine" "vm_name_01" {
       ipv4_gateway    = "${var.vm_gw_01}"
     }
   }
-  /*
+  
   extra_config = {
         "guestinfo.userdata" = "${base64gzip(data.template_file.cloud_config.rendered)}"
         "guestinfo.userdata.encoding" = "gzip+base64"
     }
-*/
+
   connection {
     host     = "${var.vm_ipv4_01}"
     type     = "ssh"
@@ -105,10 +105,8 @@ resource "vsphere_virtual_machine" "vm_name_01" {
       "mkdir /home/cisadm/.ssh",
       "touch /home/cisadm/.ssh/authorized_keys",
       "echo ${var.ssh-cisadm-pub-key} >> /home/cisadm/.ssh/authorized_keys",
-      "chmod 700 /home/cisadm/.ssh",
-      "chmod 600 /home/cisadm/.ssh/authorized_keys",
-      "sudo apt-get install python -y",
-      "history -c"       
+       "chmod 700 /home/cisadm/.ssh",
+      "chmod 600 /home/cisadm/.ssh/authorized_keys"  
     ]
   }
 }
