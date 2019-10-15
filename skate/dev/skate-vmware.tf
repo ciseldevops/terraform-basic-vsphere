@@ -46,28 +46,6 @@ resource "vsphere_folder" "terraform_folder" {
   path          = "${var.folder_terraform}"
 }
 
-
-
-/* module "server-hana" {
-  source        = "../modules/vsphere_vm"
-  vmtemp        = "SLES12SP1SAP01"
-  instances     = 1
-  vmname        = "${var.vm_name_01}"
-  vmfolder = "${var.folder_terraform}"
-  vmrp          = "LAB-1/Resources"
-  #vmrp = "${vsphere_resource_pool.root_rp.name}"
-  network_cards = ["LAB-1_VLAN2247"]
-  ipv4 = {
-    "LAB-1_VLAN2247" = ["10.210.8.199"] # To use DHCP create Empty list for each instance
-  }
-  dc        = "MATRAN"
-  datastore = "datastore1" 
-   run_once = [
-          "echo \"test\" >> /tmp/test.txt"]
-} */
-
-
-
 # Create a virtual machine within the folder
 resource "vsphere_virtual_machine" "vm_name_01" {
   wait_for_guest_net_timeout = "5"
@@ -109,8 +87,43 @@ resource "vsphere_virtual_machine" "vm_name_01" {
       ipv4_gateway    = "10.210.8.1"
     }
   }
+  provisioner "remote-exec" {
+    inline = [
+      "mkdir /home/cisadm/.ssh",
+      "touch /home/cisadm/.ssh/authorized_keys",
+      "echo ${var.ssh-cisadm-pub-key} >> /home/cisadm/.ssh/authorized_keys",
+      "chmod 700 /home/cisadm/.ssh",
+      "chmod 600 /home/cisadm/.ssh/authorized_keys",
+      "passwd --lock root"       
+    ]
+  }
+  connection {
+    host     = "10.210.8.199"
+    type     = "ssh"
+    user     = "cisadm"
+    password = "*****"
+  }
   extra_config = {
         "guestinfo.userdata" = "${base64gzip(data.template_file.cloud_config.rendered)}"
         "guestinfo.userdata.encoding" = "gzip+base64"
     }
 } 
+
+
+/* module "server-hana" {
+  source        = "../modules/vsphere_vm"
+  vmtemp        = "SLES12SP1SAP01"
+  instances     = 1
+  vmname        = "${var.vm_name_01}"
+  vmfolder = "${var.folder_terraform}"
+  vmrp          = "LAB-1/Resources"
+  #vmrp = "${vsphere_resource_pool.root_rp.name}"
+  network_cards = ["LAB-1_VLAN2247"]
+  ipv4 = {
+    "LAB-1_VLAN2247" = ["10.210.8.199"] # To use DHCP create Empty list for each instance
+  }
+  dc        = "MATRAN"
+  datastore = "datastore1" 
+   run_once = [
+          "echo \"test\" >> /tmp/test.txt"]
+} */
