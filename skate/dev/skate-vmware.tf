@@ -1,6 +1,6 @@
 provider "vsphere" {
   user           = "${var.vsphere_username}"
-  password       = "${var.vsphere_password}"
+  password       = "${var.dev_password}"
   vsphere_server = "${var.vsphere_server}"
 
   # if you have a self-signed cert
@@ -11,23 +11,22 @@ data "vsphere_datacenter" "matran" {}
 
 #Root resource pool
 data "vsphere_resource_pool" "root_rp" {
-  name          = "LAB-1/Resources"
+  name          = "${var.ressource_rp_01}"
   datacenter_id = "${data.vsphere_datacenter.matran.id}"
 }
 
 data "vsphere_datastore" "datastore1" {
-  name          = "datastore1"
+  name          = "${var.datastore1}"
   datacenter_id = "${data.vsphere_datacenter.matran.id}"
 }
 
 data "vsphere_network" "LAB-1_VLAN2247" {
-  name          = "LAB-1_VLAN2247"
+  name          = "${var.LAB-1_VLAN2247}"
   datacenter_id = "${data.vsphere_datacenter.matran.id}"
 }
 
 data "vsphere_virtual_machine" "u1804_template" {
-  #name          = "U18043V01"
-  name          = "U18043V03"
+  name          = "${var.vm_template_03}"
   datacenter_id = "${data.vsphere_datacenter.matran.id}"
 }
 
@@ -35,7 +34,7 @@ data "vsphere_virtual_machine" "u1804_template" {
 data "template_file" "cloud_config" {
   template = "${file("cloud_config.yaml")}"
   vars = {
-                vm_name_01 = "${var.vm_name_01}"
+            vm_name_01 = "${var.vm_name_01}"
         }
 }
 
@@ -79,12 +78,12 @@ resource "vsphere_virtual_machine" "vm_name_01" {
         domain    = "local"
       }
       network_interface {
-        ipv4_address = "10.210.8.199"
+        ipv4_address = "${var.vm_ipv4_01}"
         ipv4_netmask = 24
       }
       dns_server_list = "${var.dns_server_list}"
       dns_suffix_list = "${var.dns_suffix_list}"
-      ipv4_gateway    = "10.210.8.1"
+      ipv4_gateway    = "${var.vm_gw_01}"
     }
   }
   provisioner "remote-exec" {
@@ -98,17 +97,16 @@ resource "vsphere_virtual_machine" "vm_name_01" {
     ]
   }
   connection {
-    host     = "10.210.8.199"
+    host     = "${var.vm_ipv4_01}"
     type     = "ssh"
     user     = "cisadm"
-    password = "*****"
+    password = "${var.dev_password}"
   }
   extra_config = {
         "guestinfo.userdata" = "${base64gzip(data.template_file.cloud_config.rendered)}"
         "guestinfo.userdata.encoding" = "gzip+base64"
     }
 } 
-
 
 /* module "server-hana" {
   source        = "../modules/vsphere_vm"
