@@ -1,6 +1,7 @@
 variable "dev_password"{
   default = "Init.123456$"
 }
+
 variable "vsphere_username" {
   description = "vSphere LAB User"
   default = "administrator@vsphere.local"
@@ -31,9 +32,10 @@ variable "vm_name_01"{
   default = "terratestfca"
 }
 
-variable "vm_template_03"{
-  description = "Template v3"
-  default = "U18043V03"
+variable "vm_template"{
+  description = "Template"
+  #default = "U18043V03"
+  default = "SLES12SP1SAP01"
 }
 
 variable "vm_ipv4_01"{
@@ -45,7 +47,6 @@ variable "vm_gw_01"{
   description = "IPv4 GW VM 1"
   default = "10.210.8.1"
 }
-
 
 variable "LAB-1_VLAN2247"{
   description = "LAB-1_VLAN2247"

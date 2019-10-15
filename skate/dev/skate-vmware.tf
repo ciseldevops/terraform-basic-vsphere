@@ -25,11 +25,10 @@ data "vsphere_network" "LAB-1_VLAN2247" {
   datacenter_id = "${data.vsphere_datacenter.matran.id}"
 }
 
-data "vsphere_virtual_machine" "u1804_template" {
-  name          = "${var.vm_template_03}"
+data "vsphere_virtual_machine" "template" {
+  name          = "${var.vm_template}"
   datacenter_id = "${data.vsphere_datacenter.matran.id}"
 }
-
 
 data "template_file" "cloud_config" {
   template = "${file("cloud_config.yaml")}"
@@ -49,7 +48,7 @@ resource "vsphere_folder" "terraform_folder" {
 resource "vsphere_virtual_machine" "vm_name_01" {
   wait_for_guest_net_timeout = "5"
   name       = "${var.vm_name_01}"
-  guest_id   = "${data.vsphere_virtual_machine.u1804_template.guest_id}"
+  guest_id   = "${data.vsphere_virtual_machine.template.guest_id}"
   folder     = "${vsphere_folder.terraform_folder.path}"
   num_cpus   = 2
   memory     = 4096
@@ -58,19 +57,19 @@ resource "vsphere_virtual_machine" "vm_name_01" {
 
   network_interface {
         network_id   = "${data.vsphere_network.LAB-1_VLAN2247.id}"
-        adapter_type = "${data.vsphere_virtual_machine.u1804_template.network_interface_types[0]}"
+        adapter_type = "${data.vsphere_virtual_machine.template.network_interface_types[0]}"
         #adapter_type = "e1000e"
   }
 
   disk {
     label            = "disk0"
-    size             = "${data.vsphere_virtual_machine.u1804_template.disks.0.size}"
-    eagerly_scrub    = "${data.vsphere_virtual_machine.u1804_template.disks.0.eagerly_scrub}"
-    thin_provisioned = "${data.vsphere_virtual_machine.u1804_template.disks.0.thin_provisioned}"
+    size             = "${data.vsphere_virtual_machine.template.disks.0.size}"
+    eagerly_scrub    = "${data.vsphere_virtual_machine.template.disks.0.eagerly_scrub}"
+    thin_provisioned = "${data.vsphere_virtual_machine.template.disks.0.thin_provisioned}"
   }
 
   clone {
-    template_uuid = "${data.vsphere_virtual_machine.u1804_template.id}"
+    template_uuid = "${data.vsphere_virtual_machine.template.id}"
 
     customize {
       linux_options {
@@ -91,7 +90,7 @@ resource "vsphere_virtual_machine" "vm_name_01" {
         "guestinfo.userdata" = "${base64gzip(data.template_file.cloud_config.rendered)}"
         "guestinfo.userdata.encoding" = "gzip+base64"
     }
-    
+
   connection {
     host     = "${var.vm_ipv4_01}"
     type     = "ssh"
@@ -107,12 +106,27 @@ resource "vsphere_virtual_machine" "vm_name_01" {
       "echo ${var.ssh-cisadm-pub-key} >> /home/cisadm/.ssh/authorized_keys",
       "chmod 700 /home/cisadm/.ssh",
       "chmod 600 /home/cisadm/.ssh/authorized_keys",
-      "sudo passwd --lock root",
       "sudo apt-get install python -y",
       "history -c"       
     ]
   }
 } 
+
+
+/*
+  provisioner "remote-exec" {
+    inline = [
+      "mkdir /home/cisadm/.ssh",
+      "touch /home/cisadm/.ssh/authorized_keys",
+      "echo ${var.ssh-cisadm-pub-key} >> /home/cisadm/.ssh/authorized_keys",
+      "chmod 700 /home/cisadm/.ssh",
+      "chmod 600 /home/cisadm/.ssh/authorized_keys",
+      "yum install python",
+      "history -c"       
+    ]
+  }
+*/
+
 
 /* module "server-hana" {
   source        = "../modules/vsphere_vm"
