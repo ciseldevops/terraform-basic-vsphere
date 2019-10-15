@@ -86,6 +86,20 @@ resource "vsphere_virtual_machine" "vm_name_01" {
       ipv4_gateway    = "${var.vm_gw_01}"
     }
   }
+  
+  extra_config = {
+        "guestinfo.userdata" = "${base64gzip(data.template_file.cloud_config.rendered)}"
+        "guestinfo.userdata.encoding" = "gzip+base64"
+    }
+    
+  connection {
+    host     = "${var.vm_ipv4_01}"
+    type     = "ssh"
+    user     = "cisadm"
+    password = "${var.dev_password}"
+    timeout  = "5m"
+  }
+
   provisioner "remote-exec" {
     inline = [
       "mkdir /home/cisadm/.ssh",
@@ -93,19 +107,11 @@ resource "vsphere_virtual_machine" "vm_name_01" {
       "echo ${var.ssh-cisadm-pub-key} >> /home/cisadm/.ssh/authorized_keys",
       "chmod 700 /home/cisadm/.ssh",
       "chmod 600 /home/cisadm/.ssh/authorized_keys",
-      "passwd --lock root"       
+      "sudo passwd --lock root",
+      "sudo apt-get install python -y",
+      "history -c"       
     ]
   }
-  connection {
-    host     = "${var.vm_ipv4_01}"
-    type     = "ssh"
-    user     = "cisadm"
-    password = "${var.dev_password}"
-  }
-  extra_config = {
-        "guestinfo.userdata" = "${base64gzip(data.template_file.cloud_config.rendered)}"
-        "guestinfo.userdata.encoding" = "gzip+base64"
-    }
 } 
 
 /* module "server-hana" {
