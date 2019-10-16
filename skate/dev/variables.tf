@@ -1,5 +1,5 @@
 variable "dev_password"{
-  default = "Init.123456$"
+  default = "****"
 }
 
 variable "vsphere_username" {
@@ -65,7 +65,8 @@ variable "LAB-3_VLAN2252"{
 
 variable "datastore1"{
   description = "Local datastore1"
-  default = "datastore1"
+  default = "vmwarelab01"
+
 }
 
 variable "ressource_rp_01"{
