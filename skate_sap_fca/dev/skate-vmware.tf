@@ -1,4 +1,5 @@
 provider "vsphere" {
+  version        = "~> 1.12"
   user           = "${var.vsphere_username}"
   password       = "${var.dev_password}"
   vsphere_server = "${var.vsphere_server}"
@@ -47,7 +48,7 @@ resource "vsphere_folder" "terraform_folder" {
 
 # Create a virtual machine within the folder
 resource "vsphere_virtual_machine" "vm_name_01" {
-  wait_for_guest_net_timeout = "5"
+  #wait_for_guest_net_timeout = "5"
   name       = "${var.vm_name_01}"
   guest_id   = "${data.vsphere_virtual_machine.template.guest_id}"
   folder     = "${vsphere_folder.terraform_folder.path}"
@@ -87,11 +88,12 @@ resource "vsphere_virtual_machine" "vm_name_01" {
     }
   }
   
+/*
   extra_config = {
         "guestinfo.userdata" = "${base64gzip(data.template_file.cloud_config.rendered)}"
         "guestinfo.userdata.encoding" = "gzip+base64"
     }
-
+*/
   connection {
     host     = "${var.vm_ipv4_01}"
     type     = "ssh"
@@ -99,7 +101,7 @@ resource "vsphere_virtual_machine" "vm_name_01" {
     password = "${var.dev_password}"
     timeout  = "5m"
   }
-
+/*
   provisioner "remote-exec" {
     inline = [
       "mkdir /home/cisadm/.ssh",
@@ -110,7 +112,7 @@ resource "vsphere_virtual_machine" "vm_name_01" {
     ]
   }
 }
-
+*/
 
 /*
   provisioner "remote-exec" {
@@ -127,7 +129,8 @@ resource "vsphere_virtual_machine" "vm_name_01" {
 */
 
 
-/* module "server-hana" {
+/* 
+ module "server-hana" {
   source        = "../modules/vsphere_vm"
   vmtemp        = "SLES12SP1SAP01"
   instances     = 1
@@ -143,4 +146,9 @@ resource "vsphere_virtual_machine" "vm_name_01" {
   datastore = "datastore1" 
    run_once = [
           "echo \"test\" >> /tmp/test.txt"]
-} */
+} 
+*/
+
+
+
+}

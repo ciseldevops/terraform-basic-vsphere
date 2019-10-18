@@ -1,5 +1,5 @@
-variable "dev_password"{
-  default = "****"
+variable "dev_password" {
+  default = "Init.123456$"
 }
 
 variable "vsphere_username" {
@@ -22,54 +22,54 @@ variable "datacenter" {
   default = "MATRAN"
 }
 
-variable "folder_terraform"{
+variable "folder_terraform" {
   description = "Dossier VM Terraform"
-  default = "TerraformVM"
+  default = "SAP-IaC-FCA"
 }
 
-variable "vm_name_01"{
+variable "vm_name_01" {
   description = "Nom de la VM 1"
   default = "terratestfca"
 }
 
-variable "vm_template"{
+variable "vm_template" {
   description = "Template"
-  default = "U18043V03"
-  #default = "SLES12SP1SAP01"
+  #default = "U18043V03"
+  default = "SLES12SP1SAP01"
 }
 
-variable "vm_ipv4_01"{
+variable "vm_ipv4_01" {
   description = "IPv4 de la VM 1"
   default = "10.210.8.199"
 }
 
-variable "vm_gw_01"{
+variable "vm_gw_01" {
   description = "IPv4 GW VM 1"
   default = "10.210.8.1"
 }
 
-variable "LAB-1_VLAN2247"{
+variable "LAB-1_VLAN2247" {
   description = "LAB-1_VLAN2247"
   default = "LAB-1_VLAN2247"
 }
 
-variable "LAB-2_VLAN2248"{
+variable "LAB-2_VLAN2248" {
   description = "LAB-2_VLAN2248"
   default = "LAB-2_VLAN2248"
 }
 
-variable "LAB-3_VLAN2252"{
+variable "LAB-3_VLAN2252" {
   description = "LAB-3_VLAN2252"
   default = "LAB-3_VLAN2252"
 }
 
-variable "datastore1"{
+variable "datastore1" {
   description = "Local datastore1"
   default = "vmwarelab01"
 
 }
 
-variable "ressource_rp_01"{
+variable "ressource_rp_01" {
  default = "LAB-1/Resources"
 }
 
